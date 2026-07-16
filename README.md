@@ -2,6 +2,10 @@
 
 A Python CLI tool that evaluates password strength using NIST-inspired guidance, estimates entropy and crack time, checks passwords against breach-list hash files, and generates strong passwords using cryptographically secure randomness.
 
+## Why This Approach
+
+This project favors entropy, length, and breach-list checks over simple composition rules because passwords like `Password1!` can satisfy complexity requirements while still being easy to guess. Breach checking is done against local SHA-1 hashes so plaintext passwords are not sent to a live API or stored by the tool. The CLI is split into small modules so analysis, breach checking, password generation, and command-line behavior can be tested independently.
+
 ## Features
 
 - Analyze password length and character diversity
@@ -47,10 +51,52 @@ If you omit the password, the tool will prompt you securely:
 python -m password_analyzer.cli analyze
 ```
 
+Example output:
+
+```text
+Password Analysis
+-----------------
+Length: 8
+Character pool size: 26
+Character sets used: lowercase
+Entropy: 37.6 bits
+Estimated crack time: minutes
+Breach check: FOUND in 1 hashes
+
+Recommendations
+---------------
+- Do not use this password. It appears in a known breach list.
+- Consider using 15+ characters for stronger protection.
+- This password has low estimated entropy.
+- Check the password against known breached password lists.
+```
+
 ### JSON Output
 
 ```bash
 python -m password_analyzer.cli analyze "P@ssw0rd123" --json
+```
+
+Example JSON output:
+
+```json
+{
+  "length": 11,
+  "character_pool_size": 94,
+  "character_sets": [
+    "lowercase",
+    "uppercase",
+    "digits",
+    "symbols"
+  ],
+  "entropy_bits": 72.1,
+  "estimated_crack_time": "centuries+",
+  "recommendations": [
+    "Consider using 15+ characters for stronger protection.",
+    "This password has a strong estimated entropy.",
+    "Check the password against known breached password lists."
+  ]
+}
 ```
 
 ### Check Against a Breach Hash File
@@ -79,6 +125,12 @@ or like this:
 python -m password_analyzer.cli generate
 ```
 
+Example output:
+
+```text
+isFy+4@I`?xMQYvA
+```
+
 Generate a longer password:
 
 ```bash
@@ -98,6 +150,8 @@ Run the unit tests with:
 ```bash
 python -m unittest password_analyzer.tests.test_analyzer
 ```
+
+The repository also includes a GitHub Actions workflow that runs the unit tests on each push and pull request.
 
 ## Security Notes
 
@@ -127,4 +181,10 @@ This project follows several ideas inspired by NIST SP 800-63B:
 - Secure random generation with `secrets`
 - Hashing with `hashlib`
 - Unit testing
+- GitHub Actions
+- CI testing
 - Basic security engineering concepts
+
+## License
+
+This project is licensed under the MIT License.
