@@ -4,7 +4,7 @@ A Python CLI tool that evaluates password strength using NIST-inspired guidance,
 
 ## Why This Approach
 
-This project favors entropy, length, and breach-list checks over simple composition rules because passwords like `Password1!` can satisfy complexity requirements while still being easy to guess. Breach checking is done against local SHA-1 hashes so plaintext passwords are not sent to a live API or stored by the tool. The CLI is split into small modules so analysis, breach checking, password generation, and command-line behavior can be tested independently.
+The project favors entropy, length, and breach-list checking over basic compositional rules; after all, a password such as Password1! has complexity but is simple to guess. Furthermore, passwords are checked against local SHA-1 hashes for breach-checking purposes, meaning that they are not passed to a remote server or otherwise stored. Finally, the CLI was written in modular parts so that analysis, breach checking, password generation, and CLI parsing can be tested separately.
 
 ## Features
 
